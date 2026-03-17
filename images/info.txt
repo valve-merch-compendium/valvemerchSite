@@ -1,0 +1,3 @@
+// Idea is that game titles will be organized by folder.
+// Merch for specific games in the corresponding folder.
+// Database will pull images by file path 
