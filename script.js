@@ -23,8 +23,10 @@ async function loadData() {
 function updateDisplay() {
     if (!merchData.length) return;
     const item = merchData[currentIndex];
+    const itemName = item["Item Name / Description"] || "Unnamed Item";
     
-    document.getElementById('item-name').innerText = item["Item Name / Description"];
+    // Update Text Data
+    document.getElementById('item-name').innerText = itemName;
     document.getElementById('item-game').innerText = item["Game"] || "—";
     document.getElementById('item-type').innerText = item["Merch Type"] || "—";
     document.getElementById('item-year').innerText = item["Year"] || "—";
@@ -33,14 +35,41 @@ function updateDisplay() {
     document.getElementById('counter').innerText = `${currentIndex + 1} / ${merchData.length}`;
 
     const displayArea = document.getElementById('display-area');
-    const imgUrl = item["Image Preview Link"];
-    if (imgUrl && imgUrl.toLowerCase().startsWith('http')) {
-        displayArea.innerHTML = `<img src="${imgUrl}" alt="merch">`;
+    let imgValue = item["Image Preview Link"] ? item["Image Preview Link"].trim() : "";
+
+    // Reset square and add loading pulse
+    displayArea.innerHTML = '';
+    displayArea.classList.add('loading');
+
+    if (imgValue !== "") {
+        // Logic: If starts with http, use web link. 
+        // Else, use images/[game-folder]/[filename]
+        const finalSrc = imgValue.toLowerCase().startsWith('http') ? imgValue : "images/" + imgValue;
+
+        const img = new Image();
+        img.src = finalSrc;
+        img.referrerPolicy = "no-referrer";
+        
+        img.onload = () => {
+            displayArea.classList.remove('loading');
+            displayArea.innerHTML = `<img src="${finalSrc}" alt="${itemName}">`;
+        };
+
+        img.onerror = () => {
+            displayArea.classList.remove('loading');
+            showPlaceholder(itemName);
+        };
     } else {
-        displayArea.innerHTML = `<div class="placeholder-text">${item["Item Name / Description"]}</div>`;
+        displayArea.classList.remove('loading');
+        showPlaceholder(itemName);
     }
 }
 
+function showPlaceholder(name) {
+    document.getElementById('display-area').innerHTML = `<div class="placeholder-text">${name}</div>`;
+}
+
+// Navigation Controls
 function nextItem() { 
     if (merchData.length === 0) return;
     currentIndex = (currentIndex + 1) % merchData.length; 
@@ -53,15 +82,12 @@ function prevItem() {
     updateDisplay(); 
 }
 
-// Event Listeners for buttons
 document.getElementById('nextBtn').addEventListener('click', nextItem);
 document.getElementById('prevBtn').addEventListener('click', prevItem);
 
-// Event Listener for keyboard arrow keys
 document.addEventListener('keydown', (e) => {
     if (e.key === "ArrowRight") nextItem();
     if (e.key === "ArrowLeft") prevItem();
 });
 
 loadData();
-
