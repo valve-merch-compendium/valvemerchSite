@@ -88,10 +88,16 @@ body {
     transition: opacity 0.2s;
 }
 
-.nav-arrows button:hover { opacity: 0.4; }
+.nav-arrows button:hover {
+    opacity: 0.4;
+}
 
 /* Right Side */
-.info-column { flex-grow: 1; max-width: 450px; position: relative; }
+.info-column {
+    flex-grow: 1;
+    max-width: 450px;
+    position: relative;
+}
 
 .item-name-heading {
     font-size: 2.2rem;
@@ -102,8 +108,19 @@ body {
     text-transform: uppercase;
 }
 
-.label { font-size: 0.75rem; text-transform: uppercase; font-weight: 800; color: var(--text-muted); display: block; }
-.value { font-size: 1.15rem; font-weight: 500; margin-bottom: 18px; }
+.label { 
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--text-muted);
+    display: block;
+}
+
+.value { 
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-bottom: 18px;
+}
 
 /* Price Tooltip Logic */
 .price-container {
@@ -137,7 +154,9 @@ body {
     pointer-events: none;
 }
 
-.price-container:hover::after { opacity: 1; }
+.price-container:hover::after {
+    opacity: 1;
+}
 
 .counter {
     margin-top: 20px;
@@ -147,6 +166,9 @@ body {
 }
 
 @media (max-width: 850px) {
-    .container { flex-direction: column; text-align: center; }
+    .container {
+        flex-direction: column;
+        text-align: center;
+    }
 }
 
