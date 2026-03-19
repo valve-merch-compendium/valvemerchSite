@@ -1,0 +1,1 @@
+Fix scaling on images, some appear cropped out
