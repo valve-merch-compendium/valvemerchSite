@@ -46,7 +46,13 @@ body {
     overflow: hidden;
 }
 
-.image-square img { width: 100%; height: 100%; object-fit: cover; }
+.image-square img { 
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: #fcfcfc;
+    display: block;
+}
 
 /* Loading Pulse */
 .image-square.loading {
