@@ -1,1 +1,3 @@
-Fix scaling on images, some appear cropped out
+Done - Fix scaling on images, some appear cropped out
+Add search feature. Search by game/category/year
+Fix mobile browsing experience
