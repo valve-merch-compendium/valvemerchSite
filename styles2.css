@@ -1,0 +1,31 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    height: 98vh;
+}
+
+.item-display {
+    flex: 2; /* takes up 1/3 of space */
+    background-color: white;
+    padding: 20px;
+}
+
+#game-title {
+    text-align: center;
+}
+
+#grid-browser {
+    flex: 1;
+    background-color: #323232;
+    padding: 20px;
+}
+
+.category-title-medium {
+    border-bottom: 3px solid black;
+    color: white;
+    font-weight: lighter;
+}
