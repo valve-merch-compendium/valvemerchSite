@@ -1,6 +1,9 @@
 const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSQzfZTKBqqFnG8FVx__6L9SDbfkkJGeM5mQ74xChqsWag7OB675Rh0i8KID55t7M7WnMZgwopbXJF0/pub?gid=783537768&single=true&output=csv";
 let merchData = [];
+let filteredData = [];
 let currentIndex = 0;
+let gameFilter = "";
+let merchTypeFilter = "";
 
 async function loadData() {
     try {
@@ -12,6 +15,7 @@ async function loadData() {
             transformHeader: h => h.trim(),
             complete: function(results) {
                 merchData = results.data.filter(row => row["Item Name / Description"]);
+                applyFilters();
                 updateDisplay();
             }
         });
@@ -20,9 +24,29 @@ async function loadData() {
     }
 }
 
+function applyFilters() {
+    filteredData = merchData.filter(item => {
+        const game = (item["Game"] || "").toLowerCase();
+        const merch = (item["Merch Type"] || "").toLowerCase();
+        return game.includes(gameFilter.toLowerCase()) && merch.includes(merchTypeFilter.toLowerCase());
+    });
+    currentIndex = 0;
+}
+
 function updateDisplay() {
-    if (!merchData.length) return;
-    const item = merchData[currentIndex];
+    if (!filteredData.length) {
+        document.getElementById('item-name').innerText = "No Results";
+        document.getElementById('item-game').innerText = "—";
+        document.getElementById('item-type').innerText = "—";
+        document.getElementById('item-year').innerText = "—";
+        document.getElementById('item-employee').innerText = "—";
+        document.getElementById('item-price').innerText = "—";
+        document.getElementById('counter').innerText = "0 / 0";
+        document.getElementById('display-area').innerHTML = '<div class="placeholder-text">No Results</div>';
+        return;
+    }
+    
+    const item = filteredData[currentIndex];
     const itemName = item["Item Name / Description"] || "Unnamed Item";
     
     // Update Text Data
@@ -32,7 +56,7 @@ function updateDisplay() {
     document.getElementById('item-year').innerText = item["Year"] || "—";
     document.getElementById('item-employee').innerText = item["Employee Only"] || "No";
     document.getElementById('item-price').innerText = item["Price"] || "—";
-    document.getElementById('counter').innerText = `${currentIndex + 1} / ${merchData.length}`;
+    document.getElementById('counter').innerText = `${currentIndex + 1} / ${filteredData.length}`;
 
     const displayArea = document.getElementById('display-area');
     let imgValue = item["Image Preview Link"] ? item["Image Preview Link"].trim() : "";
@@ -71,16 +95,38 @@ function showPlaceholder(name) {
 
 // Navigation Controls
 function nextItem() { 
-    if (merchData.length === 0) return;
-    currentIndex = (currentIndex + 1) % merchData.length; 
+    if (filteredData.length === 0) return;
+    currentIndex = (currentIndex + 1) % filteredData.length; 
     updateDisplay(); 
 }
 
 function prevItem() { 
-    if (merchData.length === 0) return;
-    currentIndex = (currentIndex - 1 + merchData.length) % merchData.length; 
+    if (filteredData.length === 0) return;
+    currentIndex = (currentIndex - 1 + filteredData.length) % filteredData.length; 
     updateDisplay(); 
 }
+
+// Search Filter Handlers
+document.getElementById('game-search').addEventListener('input', (e) => {
+    gameFilter = e.target.value;
+    applyFilters();
+    updateDisplay();
+});
+
+document.getElementById('merch-search').addEventListener('input', (e) => {
+    merchTypeFilter = e.target.value;
+    applyFilters();
+    updateDisplay();
+});
+
+document.getElementById('clear-filters').addEventListener('click', () => {
+    gameFilter = "";
+    merchTypeFilter = "";
+    document.getElementById('game-search').value = "";
+    document.getElementById('merch-search').value = "";
+    applyFilters();
+    updateDisplay();
+});
 
 document.getElementById('nextBtn').addEventListener('click', nextItem);
 document.getElementById('prevBtn').addEventListener('click', prevItem);
