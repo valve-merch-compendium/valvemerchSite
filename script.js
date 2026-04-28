@@ -15,6 +15,7 @@ async function loadData() {
             transformHeader: h => h.trim(),
             complete: function(results) {
                 merchData = results.data.filter(row => row["Item Name / Description"]);
+                populateGameDropdown();
                 applyFilters();
                 updateDisplay();
             }
@@ -22,6 +23,24 @@ async function loadData() {
     } catch (err) { 
         document.getElementById('item-name').innerText = "Network Error"; 
     }
+}
+
+function populateGameDropdown() {
+    const gameSelect = document.getElementById('game-search');
+    const uniqueGames = [...new Set(merchData.map(item => item["Game"]).filter(Boolean))].sort();
+    
+    // Keep the "All Games" option
+    while (gameSelect.options.length > 1) {
+        gameSelect.remove(1);
+    }
+    
+    // Add unique games
+    uniqueGames.forEach(game => {
+        const option = document.createElement('option');
+        option.value = game;
+        option.textContent = game;
+        gameSelect.appendChild(option);
+    });
 }
 
 function applyFilters() {
@@ -107,7 +126,7 @@ function prevItem() {
 }
 
 // Search Filter Handlers
-document.getElementById('game-search').addEventListener('input', (e) => {
+document.getElementById('game-search').addEventListener('change', (e) => {
     gameFilter = e.target.value;
     applyFilters();
     updateDisplay();
