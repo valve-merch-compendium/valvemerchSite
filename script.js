@@ -54,7 +54,9 @@ function applyFilters() {
 
 function updateDisplay() {
     if (!filteredData.length) {
-        document.getElementById('item-name').innerText = "No Results";
+        const itemNameElement = document.getElementById('item-name');
+        itemNameElement.innerText = "No Results";
+        itemNameElement.className = 'item-name-heading';
         document.getElementById('item-game').innerText = "—";
         document.getElementById('item-type').innerText = "—";
         document.getElementById('item-year').innerText = "—";
@@ -69,7 +71,15 @@ function updateDisplay() {
     const itemName = item["Item Name / Description"] || "Unnamed Item";
     
     // Update Text Data
-    document.getElementById('item-name').innerText = itemName;
+    const itemNameElement = document.getElementById('item-name');
+    itemNameElement.innerText = itemName;
+    
+    // Apply large class if name is longer than 50 characters
+    if (itemName.length > 50) {
+        itemNameElement.className = 'item-name-heading item-name-heading-large';
+    } else {
+        itemNameElement.className = 'item-name-heading';
+    }
     document.getElementById('item-game').innerText = item["Game"] || "—";
     document.getElementById('item-type').innerText = item["Merch Type"] || "—";
     document.getElementById('item-year').innerText = item["Year"] || "—";
